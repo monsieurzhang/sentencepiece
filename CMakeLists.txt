@@ -13,7 +13,9 @@
 # limitations under the License.!
 
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
-project(sentencepiece VERSION 0.1.3 LANGUAGES CXX)
+project(sentencepiece VERSION 0.1.3 LANGUAGES C CXX)
+
+link_directories(${PROTOBUF_LIBRARY})
 
 option(SPM_ENABLE_NFKC_COMPILE "Enables NFKC compile" OFF)
 option(SPM_ENABLE_SHARED "Builds shared libaries in addition to static libraries." ON)

@@ -138,7 +138,7 @@ target_link_libraries(sentencepiece-static INTERFACE ${SPM_LIBS})
 target_link_libraries(sentencepiece_train-static INTERFACE sentencepiece-static ${SPM_LIBS})
 
 if (SPM_ENABLE_SHARED)
-  target_link_libraries(sentencepiece ${SPM_LIBS})
+  target_link_libraries(sentencepiece ${SPM_LIBS} protobuf)
   target_link_libraries(sentencepiece_train ${SPM_LIBS} sentencepiece)
   set(SPM_INSTALLTARGETS sentencepiece sentencepiece_train sentencepiece-static sentencepiece_train-static)
   set_target_properties(sentencepiece sentencepiece_train PROPERTIES SOVERSION 0 VERSION 0.0.0)
