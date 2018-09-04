@@ -45,6 +45,15 @@ util::Status SentencePieceTrainer::Train(
   return trainer->Train();
 }
 
+util::Status SentencePieceTrainer::Train_init(
+    const TrainerSpec &trainer_spec, const NormalizerSpec &normalizer_spec,
+    std::unique_ptr<sentencepiece::TrainerInterface> &trainer) {
+  auto copied_normalizer_spec = normalizer_spec;
+  RETURN_IF_ERROR(PopulateNormalizerSpec(&copied_normalizer_spec));
+  trainer = TrainerFactory::Create(trainer_spec, copied_normalizer_spec);
+  return util::OkStatus();
+}
+
 // static
 NormalizerSpec SentencePieceTrainer::GetNormalizerSpec(
     util::min_string_view name) {

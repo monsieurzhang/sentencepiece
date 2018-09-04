@@ -64,13 +64,15 @@ class TrainerInterface {
 
   virtual ~TrainerInterface();
 
-  virtual util::Status Train() { return status(); }
+  virtual util::Status Train(std::ostream *p_os = nullptr) { return status(); }
 
   virtual util::Status status() const { return status_; }
 
   FRIEND_TEST(TrainerInterfaceTest, IsValidSentencePieceTest);
   FRIEND_TEST(TrainerInterfaceTest, OverrideSpecialPiecesTest);
   FRIEND_TEST(TrainerInterfaceTest, SerializeTest);
+
+  util::Status LoadSentences(std::istream *p_is = nullptr);
 
  protected:
   // Returns true if |piece| is valid sentence piece.
@@ -80,7 +82,7 @@ class TrainerInterface {
 
   // Loads all sentences from spec.input().
   // It loads at most input_sentence_size sentences.
-  util::Status LoadSentences();
+  //util::Status LoadSentences();
 
   // Splits all sentencecs by whitespaces and
   // replace the |sentences_| with tokenized string.
@@ -90,7 +92,7 @@ class TrainerInterface {
   void SplitSentencesByWhitespace();
 
   // Save model files into spec.model_prefix().
-  util::Status Save() const;
+  util::Status Save(std::ostream *p_os = nullptr) const;
 
   // Set of characters which must be included in the final vocab.
   // The value of this map stores the frequency.
@@ -124,7 +126,7 @@ class TrainerInterface {
   util::Status SaveSplits(absl::string_view filename) const;
 
   // Saves model file.
-  util::Status SaveModel(absl::string_view filename) const;
+  util::Status SaveModel(absl::string_view filename, std::ostream *p_os = nullptr) const;
 
   // Saves vocabulary file for NMT.
   util::Status SaveVocab(absl::string_view filename) const;

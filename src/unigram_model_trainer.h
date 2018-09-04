@@ -81,7 +81,7 @@ class Trainer : public TrainerInterface {
           const NormalizerSpec &normalizer_spec)
       : TrainerInterface::TrainerInterface(trainer_spec, normalizer_spec) {}
 
-  util::Status Train() override;
+  util::Status Train(std::ostream *p_os = nullptr) override;
 
  private:
   FRIEND_TEST(TrainerTest, IsValidSentencePieceTest);

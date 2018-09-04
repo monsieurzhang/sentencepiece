@@ -25,7 +25,7 @@
 namespace sentencepiece {
 namespace word {
 
-util::Status Trainer::Train() {
+util::Status Trainer::Train(std::ostream *p_os) {
   RETURN_IF_ERROR(status());
 
   LOG(INFO) << "Starts training with : \n" << trainer_spec_.Utf8DebugString();

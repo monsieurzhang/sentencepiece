@@ -137,7 +137,7 @@ bool TrainerInterface::IsValidSentencePiece(
   return true;
 }
 
-util::Status TrainerInterface::LoadSentences() {
+util::Status TrainerInterface::LoadSentences(std::istream *p_is) {
   RETURN_IF_ERROR(status());
   CHECK_OR_RETURN(sentences_.empty());
   CHECK_OR_RETURN(required_chars_.empty());
@@ -348,14 +348,21 @@ util::Status TrainerInterface::Serialize(ModelProto *model_proto) const {
   return util::OkStatus();
 }
 
-util::Status TrainerInterface::SaveModel(absl::string_view filename) const {
+util::Status TrainerInterface::SaveModel(absl::string_view filename, std::ostream *p_os) const {
   LOG(INFO) << "Saving model: " << filename;
   ModelProto model_proto;
   RETURN_IF_ERROR(Serialize(&model_proto));
-  std::ofstream ofs(WPATH(filename.data()), OUTPUT_MODE);
-  CHECK_OR_RETURN(ofs) << "\"" << filename.data()
-                       << "\": " << util::StrError(errno);
-  CHECK_OR_RETURN(model_proto.SerializeToOstream(&ofs));
+  if(!p_os)
+  {
+    std::ofstream ofs(WPATH(filename.data()), OUTPUT_MODE);
+    CHECK_OR_RETURN(ofs) << "\"" << filename.data()
+                         << "\": " << util::StrError(errno);
+    CHECK_OR_RETURN(model_proto.SerializeToOstream(&ofs));
+  }
+  else
+  {
+    CHECK_OR_RETURN(model_proto.SerializeToOstream(p_os));
+  }
   return util::OkStatus();
 }
 
@@ -375,9 +382,10 @@ util::Status TrainerInterface::SaveVocab(absl::string_view filename) const {
   return util::OkStatus();
 }
 
-util::Status TrainerInterface::Save() const {
-  RETURN_IF_ERROR(SaveModel(trainer_spec_.model_prefix() + ".model"));
-  RETURN_IF_ERROR(SaveVocab(trainer_spec_.model_prefix() + ".vocab"));
+util::Status TrainerInterface::Save(std::ostream *p_os) const {
+  RETURN_IF_ERROR(SaveModel(trainer_spec_.model_prefix() + ".model", p_os));
+  if(!p_os)
+    RETURN_IF_ERROR(SaveVocab(trainer_spec_.model_prefix() + ".vocab"));
   return util::OkStatus();
 }
 

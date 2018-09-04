@@ -17,6 +17,7 @@
 
 #include <string>
 #include "sentencepiece_processor.h"
+#include "trainer_interface.h"
 
 namespace google {
 namespace protobuf {
@@ -39,6 +40,10 @@ class SentencePieceTrainer {
   // `normalizer_spec`.
   static util::Status Train(const TrainerSpec &trainer_spec,
                             const NormalizerSpec &normalizer_spec);
+
+  static util::Status Train_init(
+    const TrainerSpec &trainer_spec, const NormalizerSpec &normalizer_spec,
+    std::unique_ptr<sentencepiece::TrainerInterface> &trainer);
 
   // Trains SentencePiece model with command-line string in `args`,
   // e.g.,
